@@ -14,6 +14,7 @@ class Post(models.Model):
     content=models.TextField()
     created_on=models.DateTimeField(auto_now_add=True)
     status=models.IntegerField(choices=STATUS,default=0)
+    
 class Meta:
     ordering=['-created_on']
 def __str__(self):
@@ -23,6 +24,21 @@ class BlogPost(models.Model):
     blog_title=models.CharField(max_length=200)
     blog_content=RichTextField()
     publish_date=models.DateTimeField(auto_now_add=True)
-
+    updated_on=models.DateTimeField(auto_now=True)
+    created_on=models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.blog_title
+
+class Comment(models.Model):
+    post=models.ForeignKey(Post,on_delete=models.CASCADE,related_name='comments')
+    name=models.CharField(max_length=80)
+    email=models.EmailField()
+    body=models.TextField()
+    created_on=models.DateTimeField(auto_now_add=True)
+    active=models.BooleanField(default=False)
+
+    class Meta:
+        ordering=['created_on']
+
+    def __str__(self):
+        return 'Comment {} by {}'.format(self.body,self.name)
